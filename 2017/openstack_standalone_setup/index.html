@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.4.0 -->
+    <script>window.materialVersion = "1.4.0"</script>
+
+    <!-- Title -->
+    
+    <title>
+        
+            openstack-最小环境搭建记录 | 
+        
+        stdhi
+    </title>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    
+    
+    
+    
+    
+    
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="stdhi">
+    <meta name="description" itemprop="description" content>
+    <meta name="keywords" content="null">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="stdhi">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://www.grepcode.cn">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="openstack-最小环境搭建记录 | stdhi">
+    <meta property="og:image" content="/img/favicon.png">
+    <meta property="og:description" content>
+    
+
+    
+        <meta property="article:published_time" content="9月 18, 2017">
+        <meta property="article:modified_time" content="1月 15, 2021">
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="openstack-最小环境搭建记录 | stdhi">
+    <meta name="twitter:description" content>
+    <meta name="twitter:image" content="/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.grepcode.cn">
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="https://www.grepcode.cn/2017/openstack_standalone_setup/index.html">
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "stdhi",
+        "logo": "/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "stdhi",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/favicon.png"
+        },
+        "description": "stdhi"
+    },
+    "headline": "openstack-最小环境搭建记录",
+    "url": "https://www.grepcode.cn/2017/openstack_standalone_setup/index.html",
+    "datePublished": "9月 18, 2017",
+    "dateModified": "1月 15, 2021",
+    "description": "",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.grepcode.cn"
+    }
+}
+</script>
+
+
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+materialVersion+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(data&&data.indexOf(versionString)===-1){lsloader.removeLS(key)}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload){cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}code=code.split(versionString)[1];if(/\.js?.+$/.test(versionNumber)){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload)}};lsloader.requestResource=function(name,path,cssonload){var that=this;if(/\.js?.+$/.test(path)){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else if(/\.css?.+$/.test(path)){this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import CSS & jQuery -->
+    
+        <style id="css/material.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/material.min.css","/css/material.min.css?fJTiM/K1J3dWIruo3pxtAw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        <style id="css/style.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/style.min.css","/css/style.min.css?oCSEO3ST+aEypEwttTDI9g==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        
+        
+            <style>
+    
+    
+    
+    
+    
+    
+    
+    .footer-sns-github {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNCA3OGMtNi40IDEuNC0yNi40IDE0LjItMzYgMjIuOC04IDcuMi0yMiAyOS44LTI0LjQgMzkuMi0xLjYgNi40LTIgMTEzLjItMS42IDM2OCAuNiAyOTkuNCAxIDM1OS44IDMuNCAzNjQgMTEgMjAuMiAyMS42IDMyLjQgMzcuMiA0MyAxNS42IDEwLjYgMTcuMiAxMS4yIDM0LjIgMTMuMiAxMC42IDEuMiA2My40IDEuNiAxMjcuNiAxLjRsMTA5LjYtLjYgNi02LjggNi4yLTYuOC0xLjItMjUuMmMtLjgtMTUuOC0uMi0zMy40IDEuNC00Ny4yIDMtMjUuNCAxLjQtMzYuMi02LTQzLjItNS00LjYtNi4yLTQuOC0zMC42LTQuMi0yNy42LjgtMjQgMS42LTY4LjgtMTYtOC42LTMuNC0yMi42LTE4LTI4LjQtMjkuOC0xMS40LTIyLjgtMjctNDUtMzkuMi01NS42LTE0LTEyLjItMTkuOC0yMC44LTE5LjgtMjguNiAwLTExLjYgMTMuNi0xMi42IDMzLjItMi40IDE2LjYgOC44IDIwLjggMTIuNCA0MC44IDM2LjIgMjQuMiAyOC42IDMxIDMzLjYgNTQgMzkuNiAxNS4yIDQgNDIuMiAzIDUxLjQtMS44IDktNC42IDE4LTE1LjIgMjQuNC0yOS4yIDExLjQtMjQuMiA3LjQtMzEuMi0yMC42LTM2LjgtOS44LTItMjkuMi04LTQzLjQtMTMuNC00MC40LTE1LjgtNjQuNi0zNy40LTg1LjQtNzYuMi0xMS42LTIxLjgtMTUuNC0zMy0xOC4yLTUzLjYtNC4yLTMyLjItNC44LTYwLjItMS40LTg0IDMuNC0yMy44IDYuOC0zMi44IDIwLjItNTQgNC02IDguOC0xNS42IDExLTIxLjQgMy44LTEwIDMuOC0xMS42IDEtMzAtNS4yLTM0LjItMy4yLTUyLjQgNy42LTcwLjIgNy4yLTEyLjIgMTUtMTcuMiAyNC4yLTE1LjggMTIuOCAyLjIgNTIgMTcuNCA2Ni44IDI2LjIgMjYgMTUgMjkgMTUuNCA4Mi40IDcuMiAyNC42LTMuOCAzMy44LTQuMiA2MC0zLjIgMTcgLjYgNDEuNCAzIDU0IDUuMiAzOC40IDYuNiA0OS42IDUuMiA3My0xMCA2LjYtNC4yIDE3LjQtOS40IDI0LTExLjYgNi42LTIuMiAxNi01LjggMjEtOC4yIDEzLTYgMjgtNS42IDM1LjYuOCAxMi40IDEwLjQgMTguNiA0MS40IDE0LjQgNzEuNi00LjQgMzAuNi0zIDM5LjQgOC40IDUzLjggMy40IDQuNCAxMS4yIDE5LjIgMTcuNCAzMy4yTDc3NSA0NDN2NzhsLTEwIDI4Yy0xNS4yIDQzLjItMzYuOCA3My4yLTY2LjIgOTIuOC0xMy40IDguOC01NyAyNS40LTc2LjggMjktMjguMiA1LjItMzMuMiAxMi42LTIyIDMyLjIgMTEuMiAxOS40IDEyLjQgMzIuOCAxMS42IDEyOS42bC0uNiA4NS44IDUuNCA0LjZjMy42IDMgOS4yIDUuMiAxNiA2IDUuOC44IDYwLjIgMSAxMjAuNi42IDEwOC40LS42IDExMC4yLS42IDExOS01IDI0LTExLjYgNDAtMjcuNCA1MS42LTUwLjZsNS40LTExIC42LTM0N2MuNC0yMjMtLjItMzUzLjQtMS40LTM2NS0yLTE3LTIuNi0xOC42LTEzLTM0LTEwLjYtMTUuNC0yMi44LTI2LjItNDMuMi0zNy4yLTQuMi0yLjQtNjQuNi0yLjgtMzY2LTMuMi0xOTguNiAwLTM2NCAuNC0zNjcuNiAxLjR6Ii8+PC9zdmc+);
+    }
+    
+    
+    
+    
+    
+</style>
+
+        
+        <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+        <script>lsloader.load("js/jquery.min.js","/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==")</script>
+    
+    
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-99618050-1', 'auto');ga('send', 'pageview');
+</script>
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">1.</span> <span class="post-toc-text">配置环境</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装认证服务 Identity service</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1 数据库配置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">1.1 安装MySQL </span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">1.2 配置MySQL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.1.2.1.</span> <span class="post-toc-text">1.2.1 权限配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.1.2.2.</span> <span class="post-toc-text">1.2.2 新建数据库实例</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2 安装Keystone service</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">2.1 从源安装</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">2.2 设置配置文件 /etc/keystone/keystone.conf</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">2.3 初始化数据库</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3 安装配置Apache HTTP Server</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">3.1 编辑 /etc/apache2/apache2.conf</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">3.2 编辑 /etc/apache2/sites-available/wsgi-keystone.conf</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.3.3.</span> <span class="post-toc-text">3.3 通过软连接启用wsgi服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4 启动服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">5 新建服务entity和api endpoint</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">6 新建项目(project),用户(user),角色(role)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.1.</span> <span class="post-toc-text">6.1 新建管理项目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.2.</span> <span class="post-toc-text">6.2 新建Service项目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.3.</span> <span class="post-toc-text">6.3 新建demo项目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.4.</span> <span class="post-toc-text">6.4 验证</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.4.1.</span> <span class="post-toc-text">6.4.1 关闭临时验证机制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.4.2.</span> <span class="post-toc-text">6.4.2 重置之前的环境变量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.4.3.</span> <span class="post-toc-text">6.4.3 以admin用户生成授权token</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.6.4.4.</span> <span class="post-toc-text">6.4.4 以普通用户生成授权token</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">7 环境变量初始化脚本</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.1.</span> <span class="post-toc-text">7.1 管理员环境变量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.2.</span> <span class="post-toc-text">7.2 普通用户环境变量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.3.</span> <span class="post-toc-text">7.3 测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.4.</span> <span class="post-toc-text">7.4 重置环境变量</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.</span> <span class="post-toc-text">安装镜像服务 Image service</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1 Image service服务介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2 安装与配置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">2.1 准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.1.1.</span> <span class="post-toc-text">2.1.1 新建数据库</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.1.2.</span> <span class="post-toc-text">2.1.2 初始化环境变量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.1.3.</span> <span class="post-toc-text">2.1.3 建立服务认证信息.</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.1.4.</span> <span class="post-toc-text">2.1.4 新建Image Service Api的endpoint</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">2.3 安装与配置组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.2.1.</span> <span class="post-toc-text">2.3.1 包安装</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.2.2.</span> <span class="post-toc-text">2.3.2 编辑配置文件 /etc/glance/glance-api.conf</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.2.3.</span> <span class="post-toc-text">2.3.3 编辑配置文件 /etc/glance/glance-registry.conf</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.2.4.</span> <span class="post-toc-text">2.3.4 初始化数据库</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">2.4 收尾工作</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3 验证</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.3.1.</span> <span class="post-toc-text">3.1 增加环境变量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.3.2.</span> <span class="post-toc-text">3.2 下载镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.3.3.</span> <span class="post-toc-text">3.3 创建镜像</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">4 错误与异常</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.4.1.</span> <span class="post-toc-text">4.1 glance-registry配置错误</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">3.4.2.</span> <span class="post-toc-text">4.2 glance-api配置错误</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">4.</span> <span class="post-toc-text">安装计算服务 Compute service</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">5.</span> <span class="post-toc-text">安装网络服务 Networking service</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">6.</span> <span class="post-toc-text">安装控制面板 Dashboard</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#null"><span class="post-toc-number">7.</span> <span class="post-toc-text">安装块存储服务 Block Storage service</span></a></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+    
+
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                openstack-最小环境搭建记录
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/logo.jpg" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>stdhi</strong>
+        <span>9月 18, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=openstack-最小环境搭建记录&url=https://www.grepcode.cn/2017/openstack_standalone_setup/index.html&via=stdhi" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://www.grepcode.cn/2017/openstack_standalone_setup/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://www.grepcode.cn/2017/openstack_standalone_setup/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <blockquote>
+<p>参考资料</p>
+<p><a href="https://docs.openstack.org/install-guide/openstack-services.html#minimal-deployment" target="_blank" rel="noopener">官方链接: 如何搭建最小化openstack开发环境</a></p>
+</blockquote>
+<h1><span id="配置环境">配置环境</span></h1><pre><code class="bash">$ sudo apt-get install python-openstackclient
+</code></pre>
+<h1><span id="安装认证服务-identity-service">安装认证服务 Identity service</span></h1><blockquote>
+<p><a href="https://docs.openstack.org/liberty/install-guide-ubuntu/keystone-install.html" target="_blank" rel="noopener">官方链接</a></p>
+</blockquote>
+<h2><span id="1-数据库配置">1 数据库配置</span></h2><h3><span id="11-安装mysql-参考在ubuntu-1604安装mysql-server">1.1 安装MySQL </span></h3><pre><code class="bash">$ apt-get install mysql-server
+</code></pre>
+<h3><span id="12-配置mysql">1.2 配置MySQL</span></h3><h4><span id="121-权限配置">1.2.1 权限配置</span></h4><pre><code class="bash">$ mysql -u root -p
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO &#39;keystone&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;KEYSTONE_DBPASS&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO &#39;keystone&#39;@&#39;%&#39; IDENTIFIED BY &#39;KEYSTONE_DBPASS&#39;;
+</code></pre>
+<h4><span id="122-新建数据库实例">1.2.2 新建数据库实例</span></h4><pre><code class="bash">mysql&gt; CREATE DATABASE keystone;
+</code></pre>
+<blockquote>
+<p>保存 KEYSTONE_DBPASS 备用</p>
+</blockquote>
+<h2><span id="2-安装keystone-service">2 安装Keystone service</span></h2><h3><span id="21-从源安装">2.1 从源安装</span></h3><pre><code class="bash">$ echo &quot;manual&quot; &gt; /etc/init/keystone.override
+$ apt-get install keystone apache2 libapache2-mod-wsgi memcached python-memcache
+</code></pre>
+<h3><span id="22-设置配置文件-etckeystonekeystoneconf">2.2 设置配置文件 /etc/keystone/keystone.conf</span></h3><pre><code>#生成个随机密码作为 ADMIN_TOKEN
+[DEFAULT]
+admin_token = ADMIN_TOKEN
+verbose = True
+[database]
+connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@127.0.0.1:3306/keystone
+[memcache]
+servers = localhost:11211
+[token]
+provider = uuid
+driver = memcache
+[revoke]
+driver = sql
+</code></pre><p>配置结果</p>
+<pre><code>$ grep -P &#39;^[^#].+&#39; /etc/keystone/keystone.conf
+[DEFAULT]
+admin_token = ADMIN_TOKEN
+verbose = true
+log_dir = /var/log/keystone
+[assignment]
+[auth]
+[cache]
+[catalog]
+[cors]
+[cors.subdomain]
+[credential]
+[database]
+connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@127.0.0.1:3306/keystone
+[domain_config]
+[endpoint_filter]
+[endpoint_policy]
+[eventlet_server]
+[eventlet_server_ssl]
+[federation]
+[fernet_tokens]
+[identity]
+[identity_mapping]
+[kvs]
+[ldap]
+[matchmaker_redis]
+[memcache]
+servers = localhost:11211
+[oauth1]
+[os_inherit]
+[oslo_messaging_amqp]
+[oslo_messaging_notifications]
+[oslo_messaging_rabbit]
+[oslo_middleware]
+[oslo_policy]
+[paste_deploy]
+[policy]
+[resource]
+[revoke]
+driver = sql
+[role]
+[saml]
+[shadow_users]
+[signing]
+[ssl]
+[token]
+provider = uuid
+driver = memcache
+[tokenless_auth]
+[trust]
+[extra_headers]
+Distribution = Ubuntu
+</code></pre><h3><span id="23-初始化数据库">2.3 初始化数据库</span></h3><pre><code class="bash">$ /bin/sh -c &quot;keystone-manage db_sync&quot; keystone
+</code></pre>
+<blockquote>
+<p><strong>!!! 错误与异常</strong></p>
+<pre><code>Option &quot;verbose&quot; from group &quot;DEFAULT&quot; is deprecated for removal.  Its value may be silently ignored in the future.
+</code></pre><p>参考链接中的Database配置为controller.需要改为127.0.0.1+端口</p>
+</blockquote>
+<h2><span id="3-安装配置apache-http-server">3 安装配置Apache HTTP Server</span></h2><h3><span id="31-编辑-etcapache2apache2conf">3.1 编辑 /etc/apache2/apache2.conf</span></h3><pre><code>ServerName controller
+</code></pre><p>配置结果</p>
+<pre><code>$ grep -P &#39;^[^#]&#39; /etc/apache2/apache2.conf
+Mutex file:${APACHE_LOCK_DIR} default
+PidFile ${APACHE_PID_FILE}
+Timeout 300
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 5
+User ${APACHE_RUN_USER}
+Group ${APACHE_RUN_GROUP}
+HostnameLookups Off
+ErrorLog ${APACHE_LOG_DIR}/error.log
+LogLevel warn
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+Include ports.conf
+&lt;Directory /&gt;
+        Options FollowSymLinks
+        AllowOverride None
+        Require all denied
+&lt;/Directory&gt;
+&lt;Directory /usr/share&gt;
+        AllowOverride None
+        Require all granted
+&lt;/Directory&gt;
+&lt;Directory /var/www/&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+&lt;/Directory&gt;
+AccessFileName .htaccess
+&lt;FilesMatch &quot;^\.ht&quot;&gt;
+        Require all denied
+&lt;/FilesMatch&gt;
+LogFormat &quot;%v:%p %h %l %u %t \&quot;%r\&quot; %&gt;s %O \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; vhost_combined
+LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %O \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; combined
+LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %O&quot; common
+LogFormat &quot;%{Referer}i -&gt; %U&quot; referer
+LogFormat &quot;%{User-agent}i&quot; agent
+IncludeOptional conf-enabled/*.conf
+IncludeOptional sites-enabled/*.conf
+ServerName controller
+</code></pre><h3><span id="32-编辑-etcapache2sites-availablewsgi-keystoneconf">3.2 编辑 /etc/apache2/sites-available/wsgi-keystone.conf</span></h3><pre><code>Listen 5000
+Listen 35357
+
+&lt;VirtualHost *:5000&gt;
+    WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIProcessGroup keystone-public
+    WSGIScriptAlias / /usr/bin/keystone-wsgi-public
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    &lt;IfVersion &gt;= 2.4&gt;
+      ErrorLogFormat &quot;%{cu}t %M&quot;
+    &lt;/IfVersion&gt;
+    ErrorLog /var/log/apache2/keystone.log
+    CustomLog /var/log/apache2/keystone_access.log combined
+
+    &lt;Directory /usr/bin&gt;
+        &lt;IfVersion &gt;= 2.4&gt;
+            Require all granted
+        &lt;/IfVersion&gt;
+        &lt;IfVersion &lt; 2.4&gt;
+            Order allow,deny
+            Allow from all
+        &lt;/IfVersion&gt;
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:35357&gt;
+    WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIProcessGroup keystone-admin
+    WSGIScriptAlias / /usr/bin/keystone-wsgi-admin
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    &lt;IfVersion &gt;= 2.4&gt;
+      ErrorLogFormat &quot;%{cu}t %M&quot;
+    &lt;/IfVersion&gt;
+    ErrorLog /var/log/apache2/keystone.log
+    CustomLog /var/log/apache2/keystone_access.log combined
+
+    &lt;Directory /usr/bin&gt;
+        &lt;IfVersion &gt;= 2.4&gt;
+            Require all granted
+        &lt;/IfVersion&gt;
+        &lt;IfVersion &lt; 2.4&gt;
+            Order allow,deny
+            Allow from all
+        &lt;/IfVersion&gt;
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre><h3><span id="33-通过软连接启用wsgi服务">3.3 通过软连接启用wsgi服务</span></h3><pre><code class="bash">$ ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
+</code></pre>
+<h2><span id="4-启动服务">4 启动服务</span></h2><pre><code class="bash">$ service apache2 restart
+</code></pre>
+<h2><span id="5-新建服务entity和api-endpoint">5 新建服务entity和api endpoint</span></h2><pre><code class="bash">$ read -s ADMIN_TOKEN; export OS_TOKEN=$ADMIN_TOKEN
+$ export OS_URL=http://127.0.0.1:35357/v3
+$ export OS_IDENTITY_API_VERSION=3
+$ openstack service create --name keystone --description &quot;OpenStack Identity&quot; identity
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | OpenStack Identity               |
+| enabled     | True                             |
+| id          | 6a49f3baf5a54e00a2ec80ff1a93ef7f |
+| name        | keystone                         |
+| type        | identity                         |
++-------------+----------------------------------+
+$ openstack endpoint create --region RegionOne identity public http://127.0.0.1:5000/v2.0
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | a29f21ed744a4422b368db6c5272004c |
+| interface    | public                           |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 6a49f3baf5a54e00a2ec80ff1a93ef7f |
+| service_name | keystone                         |
+| service_type | identity                         |
+| url          | http://127.0.0.1:5000/v2.0       |
++--------------+----------------------------------+
+$ openstack endpoint create --region RegionOne identity internal http://127.0.0.1:5000/v2.0
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | 9376897e4ded4fdd9e6d557d29313bc9 |
+| interface    | internal                         |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 6a49f3baf5a54e00a2ec80ff1a93ef7f |
+| service_name | keystone                         |
+| service_type | identity                         |
+| url          | http://127.0.0.1:5000/v2.0       |
++--------------+----------------------------------+
+$ openstack endpoint create --region RegionOne identity admin http://127.0.0.1:35357/v2.0
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | cbdff53a744644f48a9859f8b14b3d1d |
+| interface    | admin                            |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 6a49f3baf5a54e00a2ec80ff1a93ef7f |
+| service_name | keystone                         |
+| service_type | identity                         |
+| url          | http://127.0.0.1:35357/v2.0      |
++--------------+----------------------------------+
+</code></pre>
+<h2><span id="6-新建项目project用户user角色role">6 新建项目(project),用户(user),角色(role)</span></h2><blockquote>
+<p><a href="https://docs.openstack.org/liberty/install-guide-ubuntu/keystone-users.html" target="_blank" rel="noopener">原文链接</a></p>
+</blockquote>
+<h3><span id="61-新建管理项目">6.1 新建管理项目</span></h3><pre><code class="bash">$ export DOMAIN=grepcode.cn
+$ openstack domain create $DOMAIN
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description |                                  |
+| enabled     | True                             |
+| id          | 54c57ce57f7c4182b32764e17d332097 |
+| name        | grepcode.cn                      |
++-------------+----------------------------------+
+$ openstack project create --domain $DOMAIN --description &quot;Admin Project&quot; admin
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | Admin Project                    |
+| domain_id   | 54c57ce57f7c4182b32764e17d332097 |
+| enabled     | True                             |
+| id          | fe97e8c8fcdd4100b0e9c0ca4a9be60d |
+| is_domain   | False                            |
+| name        | admin                            |
+| parent_id   | 54c57ce57f7c4182b32764e17d332097 |
++-------------+----------------------------------+
+$ openstack user create --domain $DOMAIN --password-prompt admin
+User Password:
+Repeat User Password:
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | 54c57ce57f7c4182b32764e17d332097 |
+| enabled   | True                             |
+| id        | 6ed74fe811604851979f8736d24afce6 |
+| name      | admin                            |
++-----------+----------------------------------+
+$ openstack role create admin
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | None                             |
+| id        | e43201e85312466ca3fde5cff187eb6f |
+| name      | admin                            |
++-----------+----------------------------------+
+$ openstack role add --project admin --user admin admin
+</code></pre>
+<h3><span id="62-新建service项目">6.2 新建Service项目</span></h3><blockquote>
+<p>This guide uses a service project that contains a unique user for each service that you add to your environment. Create the <code>service</code> project</p>
+<p>译: 手册中所使用的每一个服务项目都包含一个单独唯一的用户.新建服务.</p>
+</blockquote>
+<pre><code>$ openstack project create --domain $DOMAIN --description &quot;Service Project&quot; service
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | Service Project                  |
+| domain_id   | 54c57ce57f7c4182b32764e17d332097 |
+| enabled     | True                             |
+| id          | bb4ec1805e4f43188313e5642fbe6099 |
+| is_domain   | False                            |
+| name        | service                          |
+| parent_id   | 54c57ce57f7c4182b32764e17d332097 |
++-------------+----------------------------------+
+</code></pre><h3><span id="63-新建demo项目">6.3 新建demo项目</span></h3><pre><code class="bash">$ openstack project create --domain $DOMAIN --description &quot;Main Project&quot; main
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | Main Project                     |
+| domain_id   | 54c57ce57f7c4182b32764e17d332097 |
+| enabled     | True                             |
+| id          | b147698bd84f46309a3e500efeef7ec7 |
+| is_domain   | False                            |
+| name        | main                             |
+| parent_id   | 54c57ce57f7c4182b32764e17d332097 |
++-------------+----------------------------------+
+$ openstack user create --domain $DOMAIN --password-prompt stdhi
+User Password:
+Repeat User Password:
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | 54c57ce57f7c4182b32764e17d332097 |
+| enabled   | True                             |
+| id        | 0f599ddbc7224449b058408379a73eff |
+| name      | stdhi                          |
++-----------+----------------------------------+
+$ openstack role create user
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | None                             |
+| id        | 7a7bc93c5f444deab89b460f0ea1fee1 |
+| name      | user                             |
++-----------+----------------------------------+
+$ openstack role add --project main --user stdhi user #增加stdhi用户到main项目的user角色
+</code></pre>
+<h3><span id="64-验证">6.4 验证</span></h3><h4><span id="641-关闭临时验证机制">6.4.1 关闭临时验证机制</span></h4><blockquote>
+<p>Edit the <code>/etc/keystone/keystone-paste.ini</code> file and remove <code>admin_token_auth</code> from the <code>[pipeline:public_api]</code>, <code>[pipeline:admin_api]</code>, and <code>[pipeline:api_v3]</code> sections.</p>
+<p>译: 编辑<code>/etc/keystone/keystone-paste.ini</code>,把<code>admin_token_auth</code>从<code>[pipeline:public_api]</code>, <code>[pipeline:admin_api]</code>和<code>[pipeline:api_v3]</code>三个段落里面删掉.</p>
+</blockquote>
+<h4><span id="642-重置之前的环境变量">6.4.2 重置之前的环境变量</span></h4><pre><code class="bash">unset OS_TOKEN OS_URL 
+</code></pre>
+<h4><span id="643-以admin用户生成授权token">6.4.3 以admin用户生成授权token</span></h4><pre><code>$ openstack --os-auth-url http://127.0.0.1:35357/v3 --os-project-domain-name $DOMAIN --os-user-domain-name $DOMAIN --os-project-name admin --os-username admin --os-auth-type password token issue
+Password:
++------------+----------------------------------+
+| Field      | Value                            |
++------------+----------------------------------+
+| expires    | 2017-09-17T11:09:57.000000Z      |
+| id         | ******************************** |
+| project_id | fe97e8c8fcdd4100b0e9c0ca4a9be60d |
+| user_id    | 6ed74fe811604851979f8736d24afce6 |
++------------+----------------------------------+
+</code></pre><h4><span id="644-以普通用户生成授权token">6.4.4 以普通用户生成授权token</span></h4><pre><code>$ openstack --os-auth-url http://127.0.0.1:5000/v3 --os-project-domain-name $DOMAIN --os-user-domain-name $DOMAIN --os-project-name main --os-username stdhi --os-auth-type password token issue
++------------+----------------------------------+
+| Field      | Value                            |
++------------+----------------------------------+
+| expires    | 2017-09-17T11:14:21.000000Z      |
+| id         | ******************************** |
+| project_id | b147698bd84f46309a3e500efeef7ec7 |
+| user_id    | 0f599ddbc7224449b058408379a73eff |
++------------+----------------------------------+
+</code></pre><h2><span id="7-环境变量初始化脚本">7 环境变量初始化脚本</span></h2><h3><span id="71-管理员环境变量">7.1 管理员环境变量</span></h3><pre><code class="bash">export OS_PROJECT_DOMAIN_NAME=grepcode.cn
+export OS_USER_DOMAIN_NAME=grepcode.cn
+export OS_PROJECT_NAME=admin
+export OS_TENANT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=********
+export OS_AUTH_URL=http://127.0.0.1:35357/v3
+export OS_IDENTITY_API_VERSION=3
+</code></pre>
+<h3><span id="72-普通用户环境变量">7.2 普通用户环境变量</span></h3><pre><code class="bash">export OS_PROJECT_DOMAIN_NAME=grepcode.cn
+export OS_USER_DOMAIN_NAME=grepcode.cn
+export OS_PROJECT_NAME=main
+export OS_TENANT_NAME=main
+export OS_USERNAME=stdhi
+export OS_PASSWORD=********
+export OS_AUTH_URL=http://127.0.0.1:5000/v3
+export OS_IDENTITY_API_VERSION=3
+</code></pre>
+<h3><span id="73-测试">7.3 测试</span></h3><pre><code>$ openstack token issue
++------------+----------------------------------+
+| Field      | Value                            |
++------------+----------------------------------+
+| expires    | 2017-09-17T11:55:47.000000Z      |
+| id         | ******************************** |
+| project_id | b147698bd84f46309a3e500efeef7ec7 |
+| user_id    | 0f599ddbc7224449b058408379a73eff |
++------------+----------------------------------+
+</code></pre><h3><span id="74-重置环境变量">7.4 重置环境变量</span></h3><pre><code>unset OS_PROJECT_DOMAIN_NAME
+unset OS_USER_DOMAIN_NAME
+unset OS_PROJECT_NAME
+unset OS_TENANT_NAME
+unset OS_USERNAME
+unset OS_PASSWORD
+unset OS_AUTH_URL
+unset OS_IDENTITY_API_VERSION
+</code></pre><h1><span id="安装镜像服务-image-service">安装镜像服务 Image service</span></h1><blockquote>
+<p><a href="https://docs.openstack.org/liberty/install-guide-ubuntu/glance.html" target="_blank" rel="noopener">参考链接</a></p>
+</blockquote>
+<h2><span id="1-image-service服务介绍">1 Image service服务介绍</span></h2><p>服务包含以下部分</p>
+<ul>
+<li>glance-api <strong>说明</strong></li>
+<li>glance-registry <strong>说明</strong></li>
+<li>Database <strong>说明</strong></li>
+<li>Storage repository for image files <strong>说明</strong></li>
+</ul>
+<h2><span id="2-安装与配置">2 安装与配置</span></h2><h3><span id="21-准备工作">2.1 准备工作</span></h3><h4><span id="211-新建数据库">2.1.1 新建数据库</span></h4><ul>
+<li>登录<pre><code>$ mysql -u root -p
+</code></pre></li>
+<li>新建数据库 <pre><code>mysql&gt; CREATE DATABASE glance;
+</code></pre></li>
+<li>授权<pre><code>mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO &#39;glance&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;GLANCE_DBPASS&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO &#39;glance&#39;@&#39;%&#39; IDENTIFIED BY &#39;GLANCE_DBPASS&#39;;
+</code></pre></li>
+</ul>
+<h4><span id="212-初始化环境变量">2.1.2 初始化环境变量</span></h4><pre><code>export OS_PROJECT_DOMAIN_NAME=grepcode.cn
+export OS_USER_DOMAIN_NAME=grepcode.cn
+export OS_PROJECT_NAME=admin
+export OS_TENANT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=*******
+export OS_AUTH_URL=http://127.0.0.1:35357/v3
+export OS_IDENTITY_API_VERSION=3
+</code></pre><h4><span id="213-建立服务认证信息">2.1.3 建立服务认证信息.</span></h4><ul>
+<li><p>新建glance用户</p>
+<pre><code>$ openstack user create --domain $DOMAIN --password-prompt glance
+User Password:
+Repeat User Password:
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | 54c57ce57f7c4182b32764e17d332097 |
+| enabled   | True                             |
+| id        | 52c9c09d48c54e4cabdc1a291f14bbe2 |
+| name      | glance                           |
++-----------+----------------------------------+
+</code></pre></li>
+<li><p>将glance用户设置为admin角色</p>
+<pre><code>openstack role add --project service --user glance admin
+</code></pre></li>
+<li><p>增加glance服务实例</p>
+<pre><code>$ openstack service create --name glance --description &quot;OpenStack Image service&quot; image
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | OpenStack Image service          |
+| enabled     | True                             |
+| id          | 4d39d12e921047728473f38e228a13b0 |
+| name        | glance                           |
+| type        | image                            |
++-------------+----------------------------------+
+</code></pre></li>
+</ul>
+<h4><span id="214-新建image-service-api的endpoint">2.1.4 新建Image Service Api的endpoint</span></h4><pre><code>$ openstack endpoint create --region RegionOne image public http://127.0.0.1:9292
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | c849c004ae1c4170a97cc9a911c9b88f |
+| interface    | public                           |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 4d39d12e921047728473f38e228a13b0 |
+| service_name | glance                           |
+| service_type | image                            |
+| url          | http://127.0.0.1:9292            |
++--------------+----------------------------------+
+$ openstack endpoint create --region RegionOne image internal http://127.0.0.1:9292
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | 1f28629dc5234ebe89bd1fc5d2da08d7 |
+| interface    | internal                         |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 4d39d12e921047728473f38e228a13b0 |
+| service_name | glance                           |
+| service_type | image                            |
+| url          | http://127.0.0.1:9292            |
++--------------+----------------------------------+
+$ openstack endpoint create --region RegionOne image admin http://127.0.0.1:9292
++--------------+----------------------------------+
+| Field        | Value                            |
++--------------+----------------------------------+
+| enabled      | True                             |
+| id           | 9bfb11f1120e48e78cff20a4a91eaf7b |
+| interface    | admin                            |
+| region       | RegionOne                        |
+| region_id    | RegionOne                        |
+| service_id   | 4d39d12e921047728473f38e228a13b0 |
+| service_name | glance                           |
+| service_type | image                            |
+| url          | http://127.0.0.1:9292            |
++--------------+----------------------------------+
+</code></pre><h3><span id="23-安装与配置组件">2.3 安装与配置组件</span></h3><h4><span id="231-包安装">2.3.1 包安装</span></h4><pre><code>apt-get install glance python-glanceclient
+</code></pre><h4><span id="232-编辑配置文件-etcglanceglance-apiconf">2.3.2 编辑配置文件 <code>/etc/glance/glance-api.conf</code></span></h4><pre><code class="bash">$ grep -P &#39;^[^#].+&#39; /etc/glance/glance-api.conf
+[DEFAULT]
+notification_driver = noop
+verbose = True
+[cors]
+[cors.subdomain]
+[database]
+backend = sqlalchemy
+connection = mysql+pymysql://glance:********@127.0.0.1:3306/glance
+[glance_store]
+default_store = file
+filesystem_store_datadir = /home/glance/images/
+[image_format]
+disk_formats = ami,ari,aki,vhd,vmdk,raw,qcow2,vdi,iso,root-tar
+[keystone_authtoken]
+auth_uri = http://127.0.0.1:5000
+auth_uri = http://127.0.0.1:35357
+auth_plugin = password
+project_domain_name = grepcode.cn
+user_domain_name = grepcode.cn
+project_name = service
+username = glance
+password = ********
+[matchmaker_redis]
+[oslo_concurrency]
+[oslo_messaging_amqp]
+[oslo_messaging_notifications]
+[oslo_messaging_rabbit]
+[oslo_policy]
+[paste_deploy]
+flavor = keystone
+[profiler]
+[store_type_location_strategy]
+[task]
+[taskflow_executor]
+</code></pre>
+<h4><span id="233-编辑配置文件-etcglanceglance-registryconf">2.3.3 编辑配置文件 <code>/etc/glance/glance-registry.conf</code></span></h4><pre><code>[DEFAULT]
+notification_driver = noop
+verbose = True
+bind_port = 9292
+[database]
+backend = sqlalchemy
+connection = mysql+pymysql://glance:********@127.0.0.1:3306/glance
+[glance_store]
+[keystone_authtoken]
+auth_uri = http://127.0.0.1:5000
+auth_url = http://127.0.0.1:35357
+auth_type = password
+project_domain_name = grepcode.cn
+user_domain_name = grepcode.cn
+project_name = service
+username = glance
+password = ********
+[matchmaker_redis]
+[oslo_messaging_amqp]
+[oslo_messaging_notifications]
+[oslo_messaging_rabbit]
+[oslo_policy]
+[paste_deploy]
+flavor = keystone
+[profiler]
+</code></pre><h4><span id="234-初始化数据库">2.3.4 初始化数据库</span></h4><pre><code>$ /bin/sh -c &quot;glance-manage db_sync&quot; glance
+</code></pre><h3><span id="24-收尾工作">2.4 收尾工作</span></h3><p>重启服务</p>
+<pre><code>$ service glance-registry restart
+$ service glance-api restart
+</code></pre><h2><span id="3-验证">3 验证</span></h2><h3><span id="31-增加环境变量">3.1 增加环境变量</span></h3><pre><code>export OS_PROJECT_DOMAIN_NAME=grepcode.cn
+export OS_USER_DOMAIN_NAME=grepcode.cn
+export OS_PROJECT_NAME=admin
+export OS_TENANT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=********
+export OS_AUTH_URL=http://127.0.0.1:35357/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+</code></pre><h3><span id="32-下载镜像">3.2 下载镜像</span></h3><pre><code>$ wget http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+</code></pre><h3><span id="33-创建镜像">3.3 创建镜像</span></h3><pre><code>$ glance image-create --name &quot;cirros&quot; --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --visibility public --progress
+[=============================&gt;] 100%
++------------------+--------------------------------------+
+| Property         | Value                                |
++------------------+--------------------------------------+
+| checksum         | ee1eca47dc88f4879d8a229cc70a07c6     |
+| container_format | bare                                 |
+| created_at       | 2017-09-18T05:44:03Z                 |
+| disk_format      | qcow2                                |
+| id               | a95b08df-1a39-4c33-a055-659db12be79b |
+| min_disk         | 0                                    |
+| min_ram          | 0                                    |
+| name             | cirros                               |
+| owner            | fe97e8c8fcdd4100b0e9c0ca4a9be60d     |
+| protected        | False                                |
+| size             | 13287936                             |
+| status           | active                               |
+| tags             | []                                   |
+| updated_at       | 2017-09-18T05:44:04Z                 |
+| virtual_size     | None                                 |
+| visibility       | public                               |
++------------------+--------------------------------------+
+</code></pre><h2><span id="4-错误与异常">4 错误与异常</span></h2><blockquote>
+<p>建议:部署时将日志文件级别改为INFO</p>
+</blockquote>
+<h3><span id="41-glance-registry配置错误">4.1 glance-registry配置错误</span></h3><p><em>错误信息:</em></p>
+<pre><code>2017-09-17 20:40:09.782 20640 WARNING keystonemiddleware.auth_token [-] Using the in-process token cache is deprecated as of the 4.2.0 release and may be removed in the 5.0.0 release or the &#39;O&#39; development cycle. The in-process cache causes inconsistent results and high memory usage. When the feature is removed the auth_token middleware will not cache tokens by default which mayresult in performance issues. It is recommended to use  memcache for the auth_token token cache by setting the memcached_servers option.
+</code></pre><blockquote>
+<p>解决方案</p>
+<p>在配置文件中增加如下配置信息:</p>
+<pre><code>[keystone_authtoken]
+...
+memcached_servers = 127.0.0.1:11211
+</code></pre><p><a href="https://bugs.launchpad.net/openstack-chef/+bug/1661753" target="_blank" rel="noopener">参考链接</a></p>
+</blockquote>
+<h3><span id="42-glance-api配置错误">4.2 glance-api配置错误</span></h3><p><em>错误信息:</em></p>
+<pre><code>2017-09-17 21:03:52.561 23129 ERROR glance MissingRequiredOptions: Auth plugin requires parameters which were not given: auth_url
+</code></pre><blockquote>
+<p>解决方案<br>将配置<code>/etc/glance/glance-api.conf</code>中<code>auth_uri</code>改为<code>auth_url</code> </p>
+</blockquote>
+<p><em>错误信息:</em></p>
+<pre><code>2017-09-17 21:04:14.570 23214 WARNING keystonemiddleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authenticate against an admin endpoint
+</code></pre><blockquote>
+<p>未遇到问题,待解决</p>
+</blockquote>
+<p><em>错误信息:</em></p>
+<pre><code>2017-09-17 21:04:14.547 23214 WARNING oslo_config.cfg [-] Option &quot;notification_driver&quot; from group &quot;DEFAULT&quot; is deprecated. Use option &quot;driver&quot; from group &quot;oslo_messaging_notifications&quot;.
+</code></pre><blockquote>
+<p>未遇到问题,待解决</p>
+</blockquote>
+<h1><span id="安装计算服务-compute-service">安装计算服务 Compute service</span></h1><h1><span id="安装网络服务-networking-service">安装网络服务 Networking service</span></h1><h1><span id="安装控制面板-dashboard">安装控制面板 Dashboard</span></h1><h1><span id="安装块存储服务-block-storage-service">安装块存储服务 Block Storage service</span></h1>
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2018/docker_new_redis/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/vim_react/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/logo.jpg" alt="stdhi's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        stdhi@grepcode.cn
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="mailto:stdhi@grepcode.cn" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2018/10/">十月 2018<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">1</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/stdhi" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-github">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;&nbsp;鄂ICP证17024089号 ©2017-&nbsp;-<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>stdhi
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+
+    <script>lsloader.load("js/lazyload.min.js","/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==")</script>
+    <script>lsloader.load("js/js.min.js","/js/js.min.js?oAl/+lvaqTFV31JXTmbrNA==")</script>
+
+
+
+    <script>lsloader.load("js/nprogress.js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==")</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Window Load-->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Bing Background -->
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
